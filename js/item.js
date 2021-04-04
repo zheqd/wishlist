@@ -1,92 +1,146 @@
 class ItemElement extends HTMLElement {
-	constructor() {
+    constructor() {
         super();
         this.config = data.config
+        this.htmlCode = ''
     }
     
-	connectedCallback() {
-		this.render();
+    connectedCallback() {
+        this.render()
+        this.innerHTML = this.htmlCode
     }
 
-    render() {
-        // TODO: проверка на name
+    appendHtml(htmlCode) {
+        this.htmlCode += htmlCode
+    }
 
-        let htmlCode = ''
-        let imageUrl = this.config.image_default
-        let imageCode = ''
+    render() {        
+        let imageCode = this.image 
+            ? `<img class="item_image" src="${this.image}"/>` 
+            : ''
 
-        if (this.image !== 'undefined' && this.image) {
-            imageUrl = this.image
-        }
-        imageCode += `<img class="item_image" src="${imageUrl}"/>`
-
-        if (this.url !== 'undefined' && this.url) {
-            htmlCode += `<a href="${this.url}"/>${imageCode}</a>`
-        } else {
-            htmlCode += imageCode
-        }
-
-        htmlCode += '<div class="item_info">'
-        
         let nameCode = `<div class="item_name">${this.name}</div>`
-        if (this.url !== 'undefined' && this.url) {
-            htmlCode += `<a href="${this.url}"/>${nameCode}</a>`
-        } else {
-            htmlCode += nameCode
+
+        let priceCode = this.price 
+            ? `<div class="item_price">${this.price} ${this.currency}</div>` 
+            : ''
+
+        let descriptionCodeDesktop = this.description
+            ? `<div class="item_description_desktop" title="${this.description}"><img src="src/images/info-icon.png"/></div>`
+            : ''
+
+        let propertiesCodeDesktop = this.properties
+            ? `<div class="item_properties_desktop" title="${this.properties}"><img src="src/images/icon-properties.png"/></div>`
+            : ''
+
+        let propertiesString = this.properties 
+            ? '<ul><li>' + this.properties.replaceAll('\n', '</li><li>') + '</li></ul>'
+            : ''
+
+        let propertiesCodeMobile = propertiesString
+            ? `<div class="item_properties_mobile">${propertiesString}</div>`
+            : ''
+
+        let descriptionCodeMobile = this.description
+            ? ` <div class="item_description_mobile">${this.description}${propertiesCodeMobile}</div>`
+            : ''
+
+        let multiCode = this.multi
+            ? `<div class="item_multi" title="Multiple"><img src="src/images/icon-multi.png"/></div>`
+            : ''
+
+        if (this.url) {
+            imageCode = `
+            <a target="_blank" href="${this.url}"/>
+                <div class="item_image_container">
+                    ${imageCode}${priceCode}
+                    <div class="item_icons">${multiCode}${descriptionCodeDesktop}${propertiesCodeDesktop}</div>
+                </div>
+            </a>`
+            nameCode = `<div class="item_name"><a target="_blank" href="${this.url}"/>${this.name}</a></div>`
         }
 
-        if (this.price !== 'undefined' && this.price) {
-            let currency = this.currency !== 'undefined' ? this.currency : this.config.currency_default
-            htmlCode += `<div class="item_price">${this.price} ${currency}</div>`
-        }
-
-        if (this.tags !== 'undefined' && this.tags) {
-            let tags = this.tags.split(',')
-            htmlCode += '<div class="item_tags">'
-            for (let i = 0; i < tags.length; i++) {
-                htmlCode += `<a class="item_tag" href="#">#${tags[i].trim()}</a>`
-            }
-            htmlCode += '</div>'
-        }
-
-        if (this.date !== 'undefined' && this.date) {
-            htmlCode += `<div class="item_date">${this.date}</div>`
-        }
-
-        htmlCode += '</div>'
+        this.appendHtml(imageCode)
         
-		this.innerHTML = htmlCode;
+        this.appendHtml('<div class="item_info_container">')
+        this.appendHtml(nameCode)
+        this.appendHtml(descriptionCodeMobile)
+        this.appendHtml('</div>')
+
+        if (this.tags) {
+            this.appendHtml('<div class="item_tags">')
+            this.appendHtml(this.tags.map(tag => `<a class="item_tag" href="#">#${tag.trim()}</a>`).join(''))
+            this.appendHtml('</div>')
+        }
+
+        if (this.date) {
+            this.appendHtml(`<div class="item_date">${this.date}</div>`)
+        }
     }
     
     get name() {
-        return this.getAttribute('name');
+        return this.getAttribute('name') !== 'undefined' 
+            ? this.getAttribute('name') 
+            : undefined;
+    }
+
+    get description() {
+        return this.getAttribute('description') !== 'undefined' 
+            ? this.getAttribute('description') 
+            : undefined;
     }
 
     get price() {
-        return this.getAttribute('price');
+        return this.getAttribute('price') !== 'undefined' 
+            ? this.getAttribute('price') 
+            : undefined;
     }
 
     get image() {
-        return this.getAttribute('image');
+        let image = this.getAttribute('image')
+        return (image !== 'undefined')
+            ? image 
+            : this.config.image_default;
     }
 
     get tags() {
-        return this.getAttribute('tags');
+        let tags = this.getAttribute('tags')
+        return tags !== 'undefined' && tags 
+            ? tags.split(',') 
+            : undefined;
     }
 
     get url() {
-        return this.getAttribute('url');
+        return this.getAttribute('url') !== 'undefined' 
+            ? this.getAttribute('url') 
+            : undefined;
     }
 
     get date() {
-        return this.getAttribute('date');
+        return this.getAttribute('date') !== 'undefined' 
+            ? this.getAttribute('date') 
+            : undefined;
     }
 
     get currency() {
-        return this.getAttribute('currency');
+        return this.getAttribute('currency') !== 'undefined' 
+            ? this.getAttribute('currency') 
+            : this.config.currency_default;
+    }
+
+    get multi() {
+        return this.getAttribute('multi') !== 'undefined' 
+            ? this.getAttribute('multi') 
+            : undefined;
+    }
+
+    get properties() {
+        return this.getAttribute('properties') !== 'undefined' 
+            ? this.getAttribute('properties') 
+            : undefined;
     }
 }
 
 if ('customElements' in window) {
-	customElements.define('item-element', ItemElement);
+    customElements.define('item-element', ItemElement);
 }

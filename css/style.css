@@ -1,5 +1,5 @@
 html {
-    background-color: black;
+    background-color: #222;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     /* -ms-text-size-adjust: 100%; */
     /* -webkit-text-size-adjust: 100%; */
@@ -8,6 +8,7 @@ html {
 .container {
     width: 95%;
     margin: 0 auto;
+    max-width: 1920px;
 }
 
 .items {
@@ -28,6 +29,7 @@ item-element {
     margin: 1em;
     box-sizing: border-box;
     border-radius: 5px;
+    position: relative;
 }
 
 item-element:hover {
@@ -35,16 +37,22 @@ item-element:hover {
     box-shadow: 0 0 3px grey;
 }
 
-.item_info {
-    position:relative;
-    padding-top: 1em;
-    border-top: thin solid #eee;
-    height: 100px;
-    line-height: 1.5em;
-    text-align: center;
+.archived {
+    background-color: #222;
+    color: #fff;
+}
+
+.archived a {
+    color: #fff;
+    text-decoration: line-through;
 }
 
 .item_name {
+    position: relative;
+    padding-top: 1em;
+    border-top: thin solid #eee;
+    line-height: 1.5em;
+    text-align: center;
     font-size: 1.2em;
     font-weight: bold;
 }
@@ -52,9 +60,9 @@ item-element:hover {
 .item_tags {
     position: absolute;
     text-align: left;
-    bottom:0;
-    left:0;
-    max-width: 50%;
+    bottom: 10px;
+    left: 10px;
+    max-width: 75%;
     font-size: 0.8em;
 }
 
@@ -62,31 +70,31 @@ item-element:hover {
     margin-right: 1em;
 }
 
-a {
+item-element a {
     color: #000;
     text-decoration: none;
 }
 
-a:hover,
-a:focus,
-a:active {
+item-element a:hover,
+item-element a:focus,
+item-element a:active {
     color: #a31d1d;
     border-bottom: 1px solid rgba(163, 29, 29, .5);
 }
 
-a:active,
-a:hover {
+item-element a:active,
+item-element a:hover {
     outline: 0;
 }
 
-a:active {
+item-element a:active {
     opacity: 0.9;
 }
 
 .item_date {
     position: absolute;
-    bottom:0;
-    right:0;
+    bottom: 10px;
+    right: 10px;
     color: grey;
     font-size: 0.8em;
 }
@@ -102,6 +110,160 @@ a:active {
     margin: 0 auto;
 }
 
+.archived .item_image {
+    opacity: 0.5;
+}
+
+
 .hidden {
     visibility: hidden;
+}
+
+.item_image_container {
+    position: relative;
+}
+
+.item_price {
+    display: inline-block;
+    position: absolute;
+    text-align: left;
+    bottom: 0;
+    left: 0;
+    background-color: #222;
+    color: #fff;
+    font-size: 1em;
+    padding: 0.5em;
+    z-index: 1000;
+    height: 20px;
+}
+
+.archived .item_price {
+    display: none;
+}
+
+.item_info_container {
+    margin-bottom: 2em;
+}
+
+.item_description_mobile {
+    position: relative;
+    text-align: center;
+    font-size: 0.7em;
+}
+
+.archived .item_description_mobile {
+    display: none;
+}
+
+.item_properties_mobile {    
+    position: relative;
+    text-align: left;
+}
+
+.item_properties_mobile ul {    
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.item_properties_mobile ul li {    
+    display: inline; 
+    margin: 5px;
+    border-radius: 3px;
+    background-color: #f7d07c;
+    padding: 5px;
+}
+
+.archived .item_properties_mobile {    
+    display: none;
+}
+
+.description:not(:empty) {
+    color: #ddd;
+    text-align: center;
+    font-size: 1.25em;
+    padding: 0.5em 0 1em;
+    margin-bottom: 0.5em;
+    border-bottom: thin solid #ddd;
+}
+
+.description a {
+    color: #1e90ff;
+}
+
+.description a:hover,
+.description a:focus,
+.description a:active {
+    color: #cd5c5c;
+    border-bottom: 1px solid rgba(205, 92, 92, .5);
+}
+
+.description a:active,
+.description a:hover {
+    outline: 0;
+}
+
+.description a:active {
+    opacity: 0.9;
+}
+
+
+/* Icons on image */
+
+.item_icons:not(:empty) {
+    display: flex;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background-color: #222;
+    font-size: 1em;
+    padding: 0.5em;
+    height: 20px;
+}
+
+.item_icons img {
+    height: 20px;
+    filter: invert(100%);
+    margin: 0 0.2em;
+    border-radius: 50%;
+}
+
+.item_description_desktop {    
+    vertical-align: middle;
+}
+
+.item_properties_desktop {    
+    vertical-align: middle;
+}
+
+.item_multi {
+    vertical-align: middle;
+}
+
+.archived .item_icons {
+    display: none;
+}
+
+.filters {
+    text-align: right;
+}
+
+.filter {
+    color: #ddd;
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+.filter:hover {
+    color: #a31d1d;
+}
+
+.filter[data-direction='asc']::before {
+    content: " ↑";
+}
+
+.filter[data-direction='desc']::before {
+    content: " ↓";
 }
